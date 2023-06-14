@@ -43,4 +43,7 @@ public class AccountService {
         }
         return false;
     }
+    public Account findByUserName(String user_name){
+        return accountRepository.findByUsername(user_name);
+    }
 }

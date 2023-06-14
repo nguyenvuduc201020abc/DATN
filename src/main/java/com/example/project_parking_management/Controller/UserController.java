@@ -10,9 +10,11 @@ import com.example.project_parking_management.Service.AccountService;
 //import com.example.project_parking_management.Service.VehicleInParkingService;
 import com.example.project_parking_management.Service.MonthTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -34,11 +36,15 @@ public class UserController {
     }
 
     @PostMapping("/signup-user")
-    public String signup(@RequestParam String username, @RequestParam String password) throws SQLException, ClassNotFoundException {
+    public ResponseEntity<?> signup(@RequestParam String username, @RequestParam String password) throws SQLException, ClassNotFoundException {
         final String role ="user";
+        if(accountService.findByUserName(username)!=null){
         Account accounts = new Account(username,passwordUtil.hashPassword(password),role);
-        accountService.saveAccount(accounts);
-        return  accounts.toString();
+            accountService.saveAccount(accounts);
+            return  ResponseEntity.ok(accounts);
+        }
+        else return ResponseEntity.status(HttpStatus.CONFLICT).body(username);
+
     }
     @PostMapping("/login-user")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws SQLException, ClassNotFoundException {
@@ -55,4 +61,18 @@ public class UserController {
 //        List<VehicleInParking> vehicleInParkings = vehicleInParkingService.getVehicleByUsername(username);
 //        return ResponseEntity.ok(vehicleInParkings);
     }
+    @PostMapping ("/post_month_ticket")
+    public ResponseEntity<?> register_month_ticket(@RequestParam String id_card, @RequestParam String license_vehicle,@RequestParam String type,@RequestParam String username,@RequestParam String parking_name,@RequestParam Date time_ticket ) throws SQLException, ClassNotFoundException {
+        MonthTicket monthTicket = new MonthTicket(id_card, license_vehicle,type, username , parking_name, time_ticket);
+        monthTicketService.saveMonthTicket(monthTicket);
+        return ResponseEntity.ok("a");
+    }
 }
+
+//    String id_card;
+//    String license_vehicle;
+//    String type;
+//    String username;
+//    String parking_name;
+//    //    Timestamp time_ticket;
+//    Date time_ticket;

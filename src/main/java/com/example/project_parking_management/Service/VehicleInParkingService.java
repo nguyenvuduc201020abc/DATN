@@ -24,6 +24,6 @@ public class VehicleInParkingService {
     }
     public VehicleInParking getVehicleById_card(String id_card) {
 
-        return vehicleInParkingRepository.findById_card(id_card);
+        return vehicleInParkingRepository.findByIdCard(id_card);
     }
 }

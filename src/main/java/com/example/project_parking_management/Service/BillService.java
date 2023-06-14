@@ -20,4 +20,7 @@ public class BillService {
     public List<Bill> getAllBill(){
         return billRepository.findAll();
     }
+    public List<Bill> getBillByParkingName(String parking_name){
+        return billRepository.findByParkingName(parking_name);
+    }
 }

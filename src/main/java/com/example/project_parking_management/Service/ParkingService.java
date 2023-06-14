@@ -21,4 +21,7 @@ public class ParkingService {
     public List<Parking> getAllParking() {
         return parkingRepository.findAll();
     }
+    public Parking getParkingByParking_name(String parking_name){
+        return parkingRepository.findByParkingName(parking_name);
+    }
 }

@@ -3,11 +3,13 @@ package com.example.project_parking_management.Controller;
 import com.example.project_parking_management.Auth.JwtUtil;
 import com.example.project_parking_management.Encode.PasswordUtil;
 import com.example.project_parking_management.Entity.Account;
+import com.example.project_parking_management.Entity.Management;
 import com.example.project_parking_management.Entity.MonthTicket;
 import com.example.project_parking_management.Entity.Parking;
 import com.example.project_parking_management.Service.AccountService;
 //import com.example.project_parking_management.Service.MonthTicketService;
 //import com.example.project_parking_management.Service.ParkingService;
+import com.example.project_parking_management.Service.ManagementService;
 import com.example.project_parking_management.Service.MonthTicketService;
 import com.example.project_parking_management.Service.ParkingService;
 import io.jsonwebtoken.Claims;
@@ -23,6 +25,8 @@ import java.time.YearMonth;
 @ResponseBody
 @CrossOrigin
 public class ManagerController {
+    @Autowired
+    ManagementService managementService;
     @Autowired
     MonthTicketService monthTicketService;
     private PasswordUtil passwordUtil;
@@ -47,6 +51,20 @@ public class ManagerController {
             Parking parking = new Parking(parking_name, parking_address, mm_price, mn_price, cm_price, cn_price, longitude, latitude, capacity_motor, capacity_car);
             parkingService.saveParking(parking);
             return ResponseEntity.ok(parking);
+        }
+        else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
+    }
+
+    @PostMapping("/add-employee")
+    public ResponseEntity<?> addEmployee(@RequestParam String parking_name, @RequestParam String username, @RequestParam String password, @RequestHeader("Authorization") String jwt){
+        Claims claims = JwtUtil.decodeToken(jwt);
+        String decodedRole = claims.get("role", String.class);
+        if(decodedRole.equals("manager")){
+            Management management = new Management(username , parking_name);
+            managementService.saveManagement(management);
+            Account account = new Account(username, password, "employee");
+            accountService.saveAccount(account);
+            return ResponseEntity.ok(management);
         }
         else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
     }

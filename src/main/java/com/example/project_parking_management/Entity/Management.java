@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class Management {
     @Id
     private String username;
-    private int parking_name;
+    private String parking_name;
 
 }

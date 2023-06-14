@@ -18,10 +18,18 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bill_id;
     private String license_vehicle;
-    private Date entry_time;
-    private String username;
+    private Timestamp entry_time;
+//    private String username;
     private Timestamp out_time;
-    private int parking_code;
-    private int cost;
+    private String parking_name;
+    private Long cost;
 
+//    public Bill(String license_vehicle, Date entry_time, String username, Timestamp out_time, int parking_code, Long cost) {
+//        this.license_vehicle = license_vehicle;
+//        this.entry_time = entry_time;
+//        this.username = username;
+//        this.out_time = out_time;
+//        this.parking_code = parking_code;
+//        this.cost = cost;
+//    }
 }
