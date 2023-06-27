@@ -22,6 +22,11 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    public void deleteAccount(Account account) {
+
+        accountRepository.delete(account);
+    }
+
     public boolean checkLoginUser(String username, String password) {
         Account user = accountRepository.findByUsername(username);
         if (user != null && PasswordUtil.checkPassword(password, user.getPassword()) && user.getRole().equals("user")) {

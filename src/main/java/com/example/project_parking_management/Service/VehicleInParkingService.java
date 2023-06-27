@@ -26,4 +26,7 @@ public class VehicleInParkingService {
 
         return vehicleInParkingRepository.findByIdCard(id_card);
     }
+    public void deleteVehicleInParking(VehicleInParking vehicleInParking){
+        vehicleInParkingRepository.delete(vehicleInParking);
+    }
 }

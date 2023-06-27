@@ -14,4 +14,11 @@ public class ManagementService  {
     public Management saveManagement(Management management){
         return managementRepository.save(management);
     }
+    public void deleteManagement(Management management){
+        managementRepository.delete(management);
+    }
+
+    public Management findByUsername(String username){
+        return managementRepository.findByUsername(username);
+    }
 }
