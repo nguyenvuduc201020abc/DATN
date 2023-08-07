@@ -4,6 +4,7 @@ import com.example.project_parking_management.Auth.JwtUtil;
 import com.example.project_parking_management.Dto.EmployeeDto;
 import com.example.project_parking_management.Encode.PasswordUtil;
 import com.example.project_parking_management.Entity.*;
+import com.example.project_parking_management.Json.InfoDetailParking;
 import com.example.project_parking_management.Json.InfoHomePage;
 import com.example.project_parking_management.Json.StatisticRevenue;
 import com.example.project_parking_management.Service.*;
@@ -33,6 +34,8 @@ import java.util.List;
 @ResponseBody
 @CrossOrigin
 public class ManagerController {
+    @Autowired
+    EntryVehicleService entryVehicleService;
     @Autowired
     ManagementService managementService;
     @Autowired
@@ -465,5 +468,62 @@ public class ManagerController {
         infoHomePage.setNumberParking(numberParking);
         infoHomePage.setNumberVehicleInParking(numberVehiclesInParking);
         return ResponseEntity.ok(infoHomePage);
+    }
+    @GetMapping("/statisticDetailParking")
+    public ResponseEntity<?> statisticDetailParking(@RequestParam int month, @RequestParam String parking_name) throws SQLException, ClassNotFoundException {
+        int numberVehicleSent = 0;
+        List<VehicleInParking> vehicleInParkings = vehicleInParkingService.getVehicleInParking();
+        int numberVehiclesInParking = 0;
+        for(VehicleInParking vehicleInParking:vehicleInParkings){
+            if(vehicleInParking.getParking_name().equals(parking_name)){
+                numberVehiclesInParking++;
+            }
+        }
+        Long revenue = 0L;
+        Long revenueMonthTicket = 0L;
+        Long revenueAll = 0L;
+//        if (decodedRole.equals("manager")) {
+        List<Bill> bills = billService.getAllBill();
+        for (Bill bill : bills) {
+            if(bill.getParking_name().equals(parking_name)) {
+                Timestamp time = bill.getEntry_time();
+                LocalDateTime dateTime = time.toLocalDateTime();
+                Month month1 = dateTime.getMonth();
+                int monthValue = month1.getValue();
+                if (monthValue == month) {
+                    revenue += bill.getCost();
+                }
+            }
+        }
+        List<EntryVehicle> entryVehicles = entryVehicleService.getEntryVehicle();
+        for(EntryVehicle entryVehicle:entryVehicles){
+            if(entryVehicle.getParking_name().equals(parking_name)){
+                Timestamp time = entryVehicle.getEntry_time();
+                LocalDateTime dateTime = time.toLocalDateTime();
+                Month month1 = dateTime.getMonth();
+                int monthValue = month1.getValue();
+                if (monthValue == month) {
+                    numberVehicleSent++;
+                }
+            }
+        }
+        List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
+        for (MonthTicket monthTicket : monthTickets) {
+            if(monthTicket.getParking_name().equals(parking_name)) {
+                Timestamp time = monthTicket.getTime_register();
+                LocalDateTime dateTime = time.toLocalDateTime();
+                Month month1 = dateTime.getMonth();
+                int monthValue = month1.getValue();
+                if (monthValue == month) {
+                    revenueMonthTicket += monthTicket.getCost();
+                }
+            }
+        }
+        revenueAll = revenueMonthTicket + revenue;
+        InfoDetailParking infoDetailParking = new InfoDetailParking();
+        infoDetailParking.setRevenue(revenueAll);
+        infoDetailParking.setNumberVehicleSent(numberVehicleSent);
+        infoDetailParking.setNumberVehicleInParking(numberVehiclesInParking);
+        return ResponseEntity.ok(infoDetailParking);
     }
 }
