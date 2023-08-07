@@ -12,6 +12,7 @@ public class EntryVehicleService {
     public EntryVehicleService(EntryVehicleRepository entryVehicleRepository) {
         this.entryVehicleRepository = entryVehicleRepository;
     }
+
     public EntryVehicle saveEntryVehicle(EntryVehicle entryVehicle) {
         return entryVehicleRepository.save(entryVehicle);
     }

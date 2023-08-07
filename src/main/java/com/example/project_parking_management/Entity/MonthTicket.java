@@ -24,6 +24,9 @@ public class MonthTicket {
     String type;
     String username;
     String parking_name;
+    String duration;
+    Timestamp time_register;
+    Long cost;
 //    Timestamp time_ticket;
-    Timestamp time;
+
 }

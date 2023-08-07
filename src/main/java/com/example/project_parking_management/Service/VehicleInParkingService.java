@@ -15,18 +15,22 @@ public class VehicleInParkingService {
     public VehicleInParkingService(VehicleInParkingRepository vehicleInParkingRepository) {
         this.vehicleInParkingRepository = vehicleInParkingRepository;
     }
-    public VehicleInParking saveVehicleInParking(VehicleInParking vehicleInParking){
+
+    public VehicleInParking saveVehicleInParking(VehicleInParking vehicleInParking) {
         return vehicleInParkingRepository.save(vehicleInParking);
     }
+
     public List<VehicleInParking> getVehicleInParking() {
 
         return vehicleInParkingRepository.findAll();
     }
+
     public VehicleInParking getVehicleById_card(String id_card) {
 
         return vehicleInParkingRepository.findByIdCard(id_card);
     }
-    public void deleteVehicleInParking(VehicleInParking vehicleInParking){
+
+    public void deleteVehicleInParking(VehicleInParking vehicleInParking) {
         vehicleInParkingRepository.delete(vehicleInParking);
     }
 }

@@ -7,5 +7,11 @@ import java.sql.Timestamp;
 public class RevenueStatisticAll {
     Timestamp beginTime;
     Timestamp endTime;
+    Long revenueMotor;
+    Long revenueCar;
+    Long revenueMotorMonth;
+    Long revenueCarMonth;
+    Long revenueMotorAll;
+    Long revenueCarAll;
     Long revenueAll;
 }

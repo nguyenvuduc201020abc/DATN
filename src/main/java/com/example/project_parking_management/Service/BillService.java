@@ -14,13 +14,16 @@ public class BillService {
     public BillService(BillRepository billRepository) {
         this.billRepository = billRepository;
     }
+
     public Bill saveBill(Bill bill) {
         return billRepository.save(bill);
     }
-    public List<Bill> getAllBill(){
+
+    public List<Bill> getAllBill() {
         return billRepository.findAll();
     }
-    public List<Bill> getBillByParkingName(String parking_name){
+
+    public List<Bill> getBillByParkingName(String parking_name) {
         return billRepository.findByParkingName(parking_name);
     }
 }

@@ -18,9 +18,13 @@ public class Parking {
     private Long mn_price;
     private Long cm_price;
     private Long cn_price;
-    private Float longitude;
-    private Float latitude;
 
+
+
+    private Long car_month;
+    private Long motor_month;
+    private Double longitude;
+    private Double latitude;
     private int   capacity_motor;
     private int   capacity_car;
 
