@@ -37,4 +37,8 @@ public class MonthTicketService {
     public MonthTicket getTicket(String id_card){
         return monthTicketRepository.findTicketById_card(id_card);
     }
+
+    public List<MonthTicket> getAllTicket(String id_card){
+        return monthTicketRepository.findAllTicketById_card(id_card);
+    }
 }

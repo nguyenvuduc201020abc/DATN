@@ -4,6 +4,7 @@ import com.example.project_parking_management.Auth.JwtUtil;
 import com.example.project_parking_management.Dto.ParkingCostDto;
 import com.example.project_parking_management.Encode.PasswordUtil;
 import com.example.project_parking_management.Entity.*;
+import com.example.project_parking_management.Json.CheckValid;
 import com.example.project_parking_management.Json.JWT;
 import com.example.project_parking_management.Json.RequestTicket;
 import com.example.project_parking_management.Service.AccountService;
@@ -114,6 +115,25 @@ public class UserController {
             ParkingCostDto parkingCostDto = new ParkingCostDto();
             parkingCostDto.setCost(monthTicket.getCost());
             return ResponseEntity.ok(gson.toJson(parkingCostDto));
+        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need user role!");
+    }
+
+    @PostMapping("/check_ticket")
+    public ResponseEntity<?> check_ticket(@RequestBody RequestTicket requestTicket, @RequestHeader("Authorization") String jwt) throws SQLException, ClassNotFoundException {
+        Claims claims = JwtUtil.decodeToken(jwt.replaceFirst("Bearer ", ""));
+        String decodedRole = claims.get("role", String.class);
+        if (decodedRole.equals("user")) {
+            List<MonthTicket> monthTickets = monthTicketService.getAllTicket(requestTicket.getId_card());
+            for(MonthTicket monthTicket:monthTickets){
+                if(monthTicket.getDuration().equals(requestTicket.getDuration())){
+                    CheckValid checkValid = new CheckValid();
+                    checkValid.setValid("false");
+                    return(ResponseEntity.ok(checkValid));
+                }
+            }
+            CheckValid checkValid = new CheckValid();
+            checkValid.setValid("true");
+            return(ResponseEntity.ok(checkValid));
         } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need user role!");
     }
 

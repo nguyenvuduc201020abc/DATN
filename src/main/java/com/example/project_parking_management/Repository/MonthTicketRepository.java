@@ -20,4 +20,7 @@ public interface MonthTicketRepository extends JpaRepository<MonthTicket, String
 
     @Query("SELECT p FROM MonthTicket p WHERE p.id_card = ?1 ORDER BY p.time_register DESC LIMIT 1")
     MonthTicket findTicketById_card(String id_card);
+
+    @Query("SELECT p FROM MonthTicket p WHERE p.id_card = ?1")
+    List<MonthTicket> findAllTicketById_card(String id_card);
 }

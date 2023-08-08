@@ -358,7 +358,6 @@ public class ManagerController {
     }
     @GetMapping("/statistic_revenue_month_parking")
     public ResponseEntity<?> statisticRevenueMonthParking(@RequestParam int month, @RequestParam String parking_name) throws SQLException, ClassNotFoundException {
-
         Long revenue = 0L;
         Long revenueMonthTicket = 0L;
         Long revenueAll = 0L;
@@ -387,6 +386,42 @@ public class ManagerController {
         return ResponseEntity.ok(revenueAll);
 //        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
     }
+
+    @GetMapping("/statistic_revenue_month_parking1")
+    public ResponseEntity<?> statisticRevenueMonthParking1(@RequestParam String parking_name) throws SQLException, ClassNotFoundException {
+        List<Long> listRevenue= new ArrayList<>();
+        for(int i=1;i<13;i++) {
+            Long revenue = 0L;
+            Long revenueMonthTicket = 0L;
+            Long revenueAll = 0L;
+//        if (decodedRole.equals("manager")) {
+            List<Bill> bills = billService.getAllBill();
+            for (Bill bill : bills) {
+                Timestamp time = bill.getEntry_time();
+                LocalDateTime dateTime = time.toLocalDateTime();
+                Month month1 = dateTime.getMonth();
+                int monthValue = month1.getValue();
+                if (monthValue == i && bill.getParking_name().equals(parking_name)) {
+                    revenue += bill.getCost();
+                }
+            }
+            List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
+            for (MonthTicket monthTicket : monthTickets) {
+                Timestamp time = monthTicket.getTime_register();
+                LocalDateTime dateTime = time.toLocalDateTime();
+                Month month1 = dateTime.getMonth();
+                int monthValue = month1.getValue();
+                if (monthValue == i && monthTicket.getParking_name().equals(parking_name)) {
+                    revenueMonthTicket += monthTicket.getCost();
+                }
+            }
+            revenueAll = revenueMonthTicket + revenue;
+            listRevenue.add(revenueAll);
+        }
+        return ResponseEntity.ok(listRevenue);
+//        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
+    }
+
     @GetMapping("/statistic_revenue_day_parking")
     public ResponseEntity<?> statisticRevenueDayParking(@RequestParam int day, @RequestParam int month, @RequestParam String parking_name) throws SQLException, ClassNotFoundException {
 
@@ -432,6 +467,56 @@ public class ManagerController {
         return ResponseEntity.ok(revenueAll);
 //        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
     }
+
+    @GetMapping("/statistic_revenue_day_parking1")
+    public ResponseEntity<?> statisticRevenueDayParking1(@RequestParam int month, @RequestParam String parking_name) throws SQLException, ClassNotFoundException {
+        List<Long> listRevenue = new ArrayList<>();
+        for(int i=1;i<31;i++){
+        Long revenue = 0L;
+        Long revenueMonthTicket = 0L;
+        Long revenueAll = 0L;
+//        if (decodedRole.equals("manager")) {
+        List<Bill> bills = billService.getAllBill();
+        for (Bill bill : bills) {
+            Timestamp time = bill.getEntry_time();
+            LocalDateTime dateTime = time.toLocalDateTime();
+            Month month1 = dateTime.getMonth();
+            int dayOfMonth = dateTime.getDayOfMonth();
+            int monthValue = month1.getValue();
+            if(monthValue==month&& dayOfMonth==i && bill.getParking_name().equals(parking_name)){
+                revenue+=bill.getCost();
+            }
+        }
+        List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
+        for (MonthTicket monthTicket : monthTickets) {
+            Timestamp time = monthTicket.getTime_register();
+            LocalDateTime dateTime = time.toLocalDateTime();
+            Month month1 = dateTime.getMonth();
+            int monthValue = month1.getValue();
+            int dayOfMonth = dateTime.getDayOfMonth();
+//            if(monthTicket.getParking_name().equals(parking_name)){
+//                System.out.println(monthValue);
+//                System.out.println(month);
+//                System.out.println(dayOfMonth);
+//                System.out.println(day);
+//                System.out.println();
+//            }
+            if(monthValue==month && dayOfMonth==i &&  monthTicket.getParking_name().equals(parking_name)){
+                System.out.println(monthValue);
+                System.out.println(month);
+                System.out.println(dayOfMonth);
+                System.out.println(i);
+                System.out.println();
+                revenueMonthTicket+=monthTicket.getCost();
+            }
+        }
+        revenueAll = revenueMonthTicket + revenue;
+        listRevenue.add(revenueAll);
+        }
+        return ResponseEntity.ok(listRevenue);
+//        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
+    }
+
     @GetMapping("/statisticHomePage")
     public ResponseEntity<?> statisticHomePage(@RequestParam int month) throws SQLException, ClassNotFoundException {
         List<Parking> parkings= parkingService.getAllParking();
