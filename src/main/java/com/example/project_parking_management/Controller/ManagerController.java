@@ -245,6 +245,38 @@ public class ManagerController {
 //        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
     }
 
+    @GetMapping("/statistic_revenue_month1")
+    public ResponseEntity<?> statisticRevenueMonth1() throws SQLException, ClassNotFoundException {
+        List<Long> listRevenue = new ArrayList<>();
+        for(int i=1; i <=12; i++) {
+            Long revenue = 0L;
+//        if (decodedRole.equals("manager")) {
+            List<Bill> bills = billService.getAllBill();
+            for (Bill bill : bills) {
+                Timestamp time = bill.getEntry_time();
+                LocalDateTime dateTime = time.toLocalDateTime();
+                Month month1 = dateTime.getMonth();
+                int monthValue = month1.getValue();
+                if (monthValue == i) {
+                    revenue += bill.getCost();
+                }
+            }
+            List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
+            for (MonthTicket monthTicket : monthTickets) {
+                Timestamp time = monthTicket.getTime_register();
+                LocalDateTime dateTime = time.toLocalDateTime();
+                Month month1 = dateTime.getMonth();
+                int monthValue = month1.getValue();
+                if (monthValue == i) {
+                    revenue += monthTicket.getCost();
+                }
+            }
+            listRevenue.add(revenue);
+        }
+        return ResponseEntity.ok(listRevenue);
+//        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need admin role!");
+    }
+
     @GetMapping("/statistic-revenue-parking")
     public ResponseEntity<?> statisticRevenueParking(@RequestParam String parking_name, @RequestParam Timestamp date3, @RequestParam Timestamp date4, @RequestHeader("Authorization") String jwt) throws SQLException, ClassNotFoundException {
 
