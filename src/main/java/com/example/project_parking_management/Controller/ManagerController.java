@@ -248,10 +248,12 @@ public class ManagerController {
     @GetMapping("/statistic_revenue_month1")
     public ResponseEntity<?> statisticRevenueMonth1() throws SQLException, ClassNotFoundException {
         List<Long> listRevenue = new ArrayList<>();
+        List<Bill> bills = billService.getAllBill();
+        List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
         for(int i=1; i <=12; i++) {
             Long revenue = 0L;
 //        if (decodedRole.equals("manager")) {
-            List<Bill> bills = billService.getAllBill();
+
             for (Bill bill : bills) {
                 Timestamp time = bill.getEntry_time();
                 LocalDateTime dateTime = time.toLocalDateTime();
@@ -261,7 +263,7 @@ public class ManagerController {
                     revenue += bill.getCost();
                 }
             }
-            List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
+
             for (MonthTicket monthTicket : monthTickets) {
                 Timestamp time = monthTicket.getTime_register();
                 LocalDateTime dateTime = time.toLocalDateTime();
@@ -422,12 +424,14 @@ public class ManagerController {
     @GetMapping("/statistic_revenue_month_parking1")
     public ResponseEntity<?> statisticRevenueMonthParking1(@RequestParam String parking_name) throws SQLException, ClassNotFoundException {
         List<Long> listRevenue= new ArrayList<>();
+        List<Bill> bills = billService.getAllBill();
+        List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
         for(int i=1;i<13;i++) {
             Long revenue = 0L;
             Long revenueMonthTicket = 0L;
             Long revenueAll = 0L;
 //        if (decodedRole.equals("manager")) {
-            List<Bill> bills = billService.getAllBill();
+
             for (Bill bill : bills) {
                 Timestamp time = bill.getEntry_time();
                 LocalDateTime dateTime = time.toLocalDateTime();
@@ -437,7 +441,7 @@ public class ManagerController {
                     revenue += bill.getCost();
                 }
             }
-            List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
+
             for (MonthTicket monthTicket : monthTickets) {
                 Timestamp time = monthTicket.getTime_register();
                 LocalDateTime dateTime = time.toLocalDateTime();
@@ -462,6 +466,7 @@ public class ManagerController {
         Long revenueAll = 0L;
 //        if (decodedRole.equals("manager")) {
         List<Bill> bills = billService.getAllBill();
+
         for (Bill bill : bills) {
             Timestamp time = bill.getEntry_time();
             LocalDateTime dateTime = time.toLocalDateTime();
@@ -503,12 +508,14 @@ public class ManagerController {
     @GetMapping("/statistic_revenue_day_parking1")
     public ResponseEntity<?> statisticRevenueDayParking1(@RequestParam int month, @RequestParam String parking_name) throws SQLException, ClassNotFoundException {
         List<Long> listRevenue = new ArrayList<>();
+        List<Bill> bills = billService.getAllBill();
+        List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
         for(int i=1;i<31;i++){
         Long revenue = 0L;
         Long revenueMonthTicket = 0L;
         Long revenueAll = 0L;
 //        if (decodedRole.equals("manager")) {
-        List<Bill> bills = billService.getAllBill();
+
         for (Bill bill : bills) {
             Timestamp time = bill.getEntry_time();
             LocalDateTime dateTime = time.toLocalDateTime();
@@ -519,7 +526,7 @@ public class ManagerController {
                 revenue+=bill.getCost();
             }
         }
-        List<MonthTicket> monthTickets = monthTicketService.getAllMonthTicket();
+
         for (MonthTicket monthTicket : monthTickets) {
             Timestamp time = monthTicket.getTime_register();
             LocalDateTime dateTime = time.toLocalDateTime();
