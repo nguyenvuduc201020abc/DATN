@@ -17,6 +17,7 @@ import com.example.project_parking_management.Service.ParkingService;
 //import com.example.project_parking_management.Service.VehicleInParkingService;
 import com.example.project_parking_management.Service.VehicleInParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -212,6 +213,15 @@ public class CommonController {
                 return ResponseEntity.ok(responseLogin);
             } else return ResponseEntity.notFound().build();
         } else return ResponseEntity.notFound().build();
+    }
+    @PutMapping ("/change_password")
+    public ResponseEntity<?> change_password(@RequestParam String username, @RequestParam String oldpassword, @RequestParam String newpassword ) {
+        Boolean check = accountService.changePassword(username, oldpassword, newpassword);
+        System.out.println(check);
+        if(check){
+            return ResponseEntity.ok("Change success");
+        }
+        return new ResponseEntity<>("Change failed", HttpStatus.BAD_REQUEST);
     }
 
 }

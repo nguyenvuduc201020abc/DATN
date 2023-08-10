@@ -364,7 +364,7 @@ public class ManagerController {
             List<Bill> bills = billService.getBillByParkingName(parking.getParking_name());
             for (Bill bill : bills) {
                 System.out.println(parking.getParking_name());
-                if(parking.getParking_name().equals("Bach Khoa Parking")) System.out.println(bill);
+//                if(parking.getParking_name().equals("Bach Khoa Parking")) System.out.println(bill);
                 if (bill.getEntry_time().after(date1) && bill.getEntry_time().before(date2) && bill.getType().toLowerCase().equals("motor") ) {
 
                     revenueMotor += bill.getCost();
@@ -649,5 +649,50 @@ public class ManagerController {
         infoDetailParking.setNumberVehicleSent(numberVehicleSent);
         infoDetailParking.setNumberVehicleInParking(numberVehiclesInParking);
         return ResponseEntity.ok(infoDetailParking);
+    }
+    @GetMapping("/get_info_parking_search")
+    public ResponseEntity<?> getInfoSearch(@RequestParam String search) throws SQLException, ClassNotFoundException {
+        List<Parking> parkings = parkingService.getAllParking();
+        List<Parking> parkingValid = new ArrayList<>();
+        for(Parking parking:parkings){
+            if(parking.getParking_name().toLowerCase().contains(search.toLowerCase())||parking.getParking_address().toLowerCase().contains(search.toLowerCase())){
+                parkingValid.add(parking);
+            }
+        }
+        return ResponseEntity.ok(parkingValid);
+    }
+
+    @GetMapping("/get_vehicle_in_parking")
+    public ResponseEntity<?> getVehicleInParking(@RequestParam String parking_name) throws SQLException, ClassNotFoundException {
+        List<VehicleInParking> vehicleInParkings = vehicleInParkingService.getVehicleByParkingname(parking_name);
+        return ResponseEntity.ok(vehicleInParkings);
+//        List<Parking> parkingValid = new ArrayList<>();
+//        for(Parking parking:parkings){
+//            if(parking.getParking_name().toLowerCase().contains(search.toLowerCase())||parking.getParking_address().toLowerCase().contains(search.toLowerCase())){
+//                parkingValid.add(parking);
+//            }
+//        }
+//        return ResponseEntity.ok(parkingValid);
+    }
+    @GetMapping("/get_employee_info_search")
+    public ResponseEntity<?> getEmployeeInfoSearch(@RequestParam String search) {
+        List<Account> accounts = accountService.getAll();
+        List<EmployeeDto> employeeDtos = new ArrayList<>();
+        for(Account account:accounts){
+            if(account.getRole().equals("employee")){
+                String username = account.getUsername();
+                Management management = managementService.findByUsername(username);
+                String parking_name = management.getParking_name();
+                String password = account.getPassword();
+                EmployeeDto employeeDto = new EmployeeDto(username,password,parking_name);
+                employeeDtos.add(employeeDto);}
+        }
+        List<EmployeeDto> employeeDtosValid = new ArrayList<>();
+        for(EmployeeDto employeeDto:employeeDtos){
+            if(employeeDto.getUsername().toLowerCase().contains(search.toLowerCase())||employeeDto.getParking_name().toLowerCase().contains(search.toLowerCase())){
+                employeeDtosValid.add(employeeDto);
+            }
+        }
+        return ResponseEntity.ok(gson.toJson(employeeDtosValid));
     }
 }

@@ -126,9 +126,10 @@ public class EmployeeController {
                     System.out.println("3");
                     java.util.Date date1 = new java.util.Date(currenTime1.getTime());
                     java.util.Date date2 = new java.util.Date(entry_time.getTime());
-//                    System.out.println(ChronoUnit.DAYS.between(date1.toInstant(), date2.toInstant()));
-//                    System.out.println(date1.getDate() - date2.getDate());
-                    cost = parking.getMm_price() + parking.getMn_price() * (date1.getDate() - date2.getDate());
+                    System.out.println(ChronoUnit.DAYS.between(date2.toInstant(),date1.toInstant()));
+                    System.out.println(date1.getDate() - date2.getDate());
+//                    cost = parking.getMm_price() + parking.getMn_price() * (date1.getDate() - date2.getDate());
+                    cost = parking.getMm_price() + parking.getMn_price() * (ChronoUnit.DAYS.between(date2.toInstant(),date1.toInstant())    );
                 } else {
                     System.out.println("4");
                     java.util.Date date1 = new java.util.Date(currenTime1.getTime());
@@ -148,6 +149,67 @@ public class EmployeeController {
 //            vehicleInParkingService.deleteVehicleInParking(vehicleInParking);
             return ResponseEntity.ok(bill);
         } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You need employee role!");
+    }
+
+    @GetMapping("/export-bill1")
+    public ResponseEntity<?> exportBill1(@RequestParam String id_card) throws SQLException, ClassNotFoundException {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(timestamp);
+
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int year = calendar.get(Calendar.YEAR);
+            String duration = month + "-" + year;
+
+
+            BillDto bill = new BillDto();
+            java.util.Date currenDate = new java.util.Date();
+            Timestamp currenTime1 = new Timestamp(currenDate.getTime());
+            VehicleInParking vehicleInParking = vehicleInParkingService.getVehicleById_card(id_card);
+            Timestamp entry_time = vehicleInParking.getEntry_time();
+
+//            calendar.setTimeInMillis(entry_time.getTime());
+//            calendar.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+//
+//            Timestamp entry_time1 = new Timestamp(calendar.getTimeInMillis());
+
+
+            String type_vehicle = vehicleInParking.getType();
+            String parking_name = vehicleInParking.getParking_name();
+            Parking parking = parkingService.getParkingByParking_name(parking_name);
+            Long cost=0L;
+            if (monthTicketService.checkTicket(id_card, parking_name, duration)) {
+                System.out.println("1");
+                cost = 0L;
+            } else {
+                System.out.println("2");
+                if (type_vehicle.toLowerCase().equals("motor")) {
+                    System.out.println("3");
+                    java.util.Date date1 = new java.util.Date(currenTime1.getTime());
+                    java.util.Date date2 = new java.util.Date(entry_time.getTime());
+                    System.out.println(ChronoUnit.DAYS.between(date2.toInstant(),date1.toInstant()));
+                    System.out.println(date1.getDate() - date2.getDate());
+//                    cost = parking.getMm_price() + parking.getMn_price() * (date1.getDate() - date2.getDate());
+                    cost = parking.getMm_price() + parking.getMn_price() * (ChronoUnit.DAYS.between(date2.toInstant(),date1.toInstant()));
+                } else {
+                    System.out.println("4");
+                    java.util.Date date1 = new java.util.Date(currenTime1.getTime());
+                    java.util.Date date2 = new java.util.Date(entry_time.getTime());
+                    System.out.println(ChronoUnit.DAYS.between(date1.toInstant(), date2.toInstant()));
+//                    cost = parking.getCm_price() + parking.getCn_price() * (date1.getDate() - date2.getDate());
+                    cost = parking.getCm_price() + parking.getCn_price() * (ChronoUnit.DAYS.between(date2.toInstant(),date1.toInstant()));
+                }
+            }
+            bill.setLicense_vehicle(vehicleInParking.getLicense_vehicle());
+            bill.setEntry_time(entry_time);
+            bill.setParking_name(vehicleInParking.getParking_name());
+            bill.setImage(vehicleInParking.getImage());
+            bill.setCost(cost);
+            bill.setType(type_vehicle);
+            System.out.println(bill);
+//            billService.saveBill(bill);
+//            vehicleInParkingService.deleteVehicleInParking(vehicleInParking);
+            return ResponseEntity.ok(bill);
     }
 
 
@@ -228,12 +290,12 @@ public ResponseEntity<?> saveBill(@RequestParam String id_card) throws SQLExcept
                 java.util.Date date1 = new java.util.Date(currenTime1.getTime());
                 java.util.Date date2 = new java.util.Date(entry_time.getTime());
                 System.out.println(ChronoUnit.DAYS.between(date1.toInstant(), date2.toInstant()));
-                cost = parking.getMm_price() + parking.getMn_price() * (date1.getDate() - date2.getDate());
+                cost = parking.getMm_price() + parking.getMn_price() * (ChronoUnit.DAYS.between(date2.toInstant(),date1.toInstant()));
             } else {
                 java.util.Date date1 = new java.util.Date(currenTime1.getTime());
                 java.util.Date date2 = new java.util.Date(entry_time.getTime());
                 System.out.println(ChronoUnit.DAYS.between(date1.toInstant(), date2.toInstant()));
-                cost = parking.getCm_price() + parking.getCn_price() * (date1.getDate() - date2.getDate());
+                cost = parking.getCm_price() + parking.getCn_price() * (ChronoUnit.DAYS.between(date2.toInstant(),date1.toInstant()));
             }
         }
         bill.setLicense_vehicle(vehicleInParking.getLicense_vehicle());

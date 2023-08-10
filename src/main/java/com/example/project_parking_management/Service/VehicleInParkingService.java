@@ -24,6 +24,11 @@ public class VehicleInParkingService {
 
         return vehicleInParkingRepository.findAll();
     }
+    public List<VehicleInParking> getVehicleByParkingname(String parking_name) {
+
+        return vehicleInParkingRepository.findByParking_name(parking_name);
+    }
+
 
     public VehicleInParking getVehicleById_card(String id_card) {
 

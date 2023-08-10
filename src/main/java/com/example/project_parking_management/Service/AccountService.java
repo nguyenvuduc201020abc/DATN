@@ -2,6 +2,7 @@ package com.example.project_parking_management.Service;
 
 import com.example.project_parking_management.Encode.PasswordUtil;
 import com.example.project_parking_management.Entity.Account;
+import com.example.project_parking_management.Entity.Parking;
 import com.example.project_parking_management.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
-
+    private PasswordUtil passwordUtil;
     @Autowired
     public AccountService(AccountRepository accountRepository) {
 
@@ -52,6 +53,7 @@ public class AccountService {
 //        }
 //        return false;
 //    }
+
     public Account findByUserName(String user_name) {
         return accountRepository.findByUsername(user_name);
     }
@@ -61,5 +63,22 @@ public class AccountService {
     @Transactional
     public void deleteAccount(String username) {
         accountRepository.deleteById(username);
+    }
+    @Transactional
+    public Boolean changePassword(String username, String oldpassword, String newpassword) {
+        Account account = accountRepository.findByUsername(username);
+        Boolean check1 = !PasswordUtil.checkPassword(oldpassword, account.getPassword());
+        Boolean check2 = oldpassword.equals(newpassword);
+        Boolean check3 = (!PasswordUtil.checkPassword(oldpassword, account.getPassword()))&&(!oldpassword.equals(newpassword));
+        System.out.println(check1);
+        System.out.println(check2);
+        System.out.println(check3);
+        if((PasswordUtil.checkPassword(oldpassword, account.getPassword()))&&(!oldpassword.equals(newpassword))){
+            System.out.println("111111");
+            account.setPassword(passwordUtil.hashPassword(newpassword));
+            accountRepository.save(account);
+            return true;
+        }
+        else return false;
     }
 }

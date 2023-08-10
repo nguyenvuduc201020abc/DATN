@@ -14,4 +14,6 @@ public interface VehicleInParkingRepository extends JpaRepository<VehicleInParki
 //    VehicleInParking findById_card(String id_card);
     @Query("SELECT p FROM VehicleInParking p WHERE p.id_card = ?1")
     VehicleInParking findByIdCard(String id_card);
+    @Query("SELECT p FROM VehicleInParking p WHERE p.parking_name = ?1")
+    List<VehicleInParking> findByParking_name(String parking_name);
 }
