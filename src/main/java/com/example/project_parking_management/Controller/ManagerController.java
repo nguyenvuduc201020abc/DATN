@@ -28,6 +28,7 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -388,6 +389,7 @@ public class ManagerController {
             statisticRevenue.setParking_name(parking.getParking_name());
             statisticRevenues.add(statisticRevenue);
         }
+        Collections.sort(statisticRevenues);
             return ResponseEntity.ok(gson.toJson(statisticRevenues));
     }
     @GetMapping("/statistic_revenue_month_parking")
