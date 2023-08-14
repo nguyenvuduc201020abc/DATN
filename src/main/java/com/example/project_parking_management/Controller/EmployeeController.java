@@ -56,6 +56,9 @@ public class EmployeeController {
 //    }
     @PostMapping("/save-vehicle")
     public ResponseEntity<?> saveVehicle(@RequestParam String license_vehicle, @RequestParam String id_card, @RequestParam String parking_name, @RequestParam String type, @RequestParam String image, @RequestHeader("Authorization") String jwt) throws SQLException, ClassNotFoundException {
+        if(license_vehicle.equals("")||id_card.equals("")||image.equals("")){
+            return new ResponseEntity<>("Change failed", HttpStatus.BAD_REQUEST);
+        }
         Claims claims = JwtUtil.decodeToken(jwt.replaceFirst("Bearer ", ""));
         String decodedRole = claims.get("role", String.class);
         if (decodedRole.equals("employee")) {
@@ -72,7 +75,9 @@ public class EmployeeController {
 
     @PostMapping("/save-vehicle1")
     public ResponseEntity<?> saveVehicle(@RequestBody RequestSaveVehicle requestSaveVehicle) throws SQLException, ClassNotFoundException {
-
+            if(requestSaveVehicle.getLicense_vehicle().equals("")||requestSaveVehicle.getLicense_vehicle().equals("")||requestSaveVehicle.getId_card().equals("")||requestSaveVehicle.getParking_name().equals("")||requestSaveVehicle.getImage().equals("")){
+            return new ResponseEntity<>("Change failed", HttpStatus.BAD_REQUEST);
+            }
             LocalDateTime currentTime = LocalDateTime.now();
             Timestamp currenTime1 = Timestamp.valueOf(currentTime);
 //            Timestamp currenTime2 = Timestamp.valueOf("2023-06-29 12:34:56");

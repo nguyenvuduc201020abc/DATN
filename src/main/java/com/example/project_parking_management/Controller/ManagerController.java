@@ -340,7 +340,7 @@ public class ManagerController {
         LocalDate currentDate = LocalDate.now();
         int currentMonth = currentDate.getMonthValue();
         int currentYear = currentDate.getYear();
-        String date3 = currentYear+"-0"+(currentMonth-1)+"-"+"01";
+        String date3 = currentYear+"-0"+(currentMonth)+"-"+"01";
         String date4 = currentYear+"-0"+(currentMonth+1)+"-"+"01";
 
 
