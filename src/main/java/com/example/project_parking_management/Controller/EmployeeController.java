@@ -22,9 +22,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.*;
 
 @Controller
 @ResponseBody
@@ -413,6 +411,18 @@ public ResponseEntity<?> checkMonthTicket(@RequestParam String parking_name, @Re
             return  ResponseEntity.ok(gson.toJson(monthTicket));
         }
         else return null;
+    }
+
+    @GetMapping("/get_info_vehicle_search")
+    public ResponseEntity<?> getInfoSearch(@RequestParam String search) throws SQLException, ClassNotFoundException {
+        List<VehicleInParking> vehicleInParkings = vehicleInParkingService.getVehicleInParking();
+        List<VehicleInParking> vehicleValid = new ArrayList<>();
+        for(VehicleInParking vehicleInParking:vehicleInParkings){
+            if(vehicleInParking.getLicense_vehicle().contains(search)){
+                vehicleValid.add(vehicleInParking);
+            }
+        }
+        return ResponseEntity.ok(vehicleValid);
     }
 //@GetMapping ("/check_month_ticket")
 //public ResponseEntity<?> checkMonthTicket(@RequestParam String parking_name, @RequestParam String type) {
