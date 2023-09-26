@@ -16,6 +16,7 @@ import com.example.project_parking_management.Service.ParkingService;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class UserController {
     public UserController(AccountService accountService) {
         this.accountService = accountService;
     }
-
+    @Qualifier
     Gson gson = new Gson();
 
     @PostMapping("/signup-user")
